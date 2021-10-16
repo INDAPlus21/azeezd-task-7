@@ -1,5 +1,8 @@
 # Azeez Daoud C task (7)
 
+## Goals
+- [ ] Optimize Cyber Clara (Somehow?)
+
 ## Techniques used
 Here is the thought process behind the solutions
 
