@@ -59,5 +59,7 @@ int main()
     // Done! :D
     printf("%li", sum);
 
+    free(numbers);
+
     return 0;
 }

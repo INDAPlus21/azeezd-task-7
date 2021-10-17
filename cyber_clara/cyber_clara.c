@@ -55,5 +55,8 @@ int main()
     // Print the new size after filtering out the duplicates
     printf("%lu", newSize);
 
+
+    free(names);
+
     return 0;
 }
