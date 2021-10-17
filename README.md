@@ -33,3 +33,12 @@ Again since C is C, another approach was taken.
 4. Add a delimiter '_' then add the last names to their corresponding first names
 5. Sort the list of names alphabetically
 6. Go through the list of names. If current name and next name are equal then it is a duplicate, reduce the amount of names by 1.
+
+### Game Rank
+This is really just following the rules given by Kattis but in general it's
+1. Get the next character in the stream while it's not end of file `EOF`
+2. If `W` apply the correct victory rules
+3. Else if `L` apply the defeat rules
+
+Some features that were added was an `enum` type that holds the ranges of the ranks and each range holds the amount of required stars to rankup for that range.
+A function was made in order to calculate and update the range the player currently is in to make the correct calculation.
