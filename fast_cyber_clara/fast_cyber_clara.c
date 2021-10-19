@@ -12,7 +12,7 @@
 ulint hashName(const char* firstName, const char* lastName);
 
 // Insert to the hashSet. Will not add if key already exists. Increments amount by one if key sucessfully added.
-void insert(const ulint key);
+void insert(const ulint* key);
 
 // A HashMap-like structure but only allows unique values
 ulint* hashSet;
@@ -33,7 +33,7 @@ typedef struct
 int main()
 {
     // Get amount of names
-    scanf("%ul", &SIZE);
+    scanf("%lu", &SIZE);
 
     // Store inputted names int the name struct
     name* names = malloc(2 * SIZE * sizeof(name));
@@ -53,11 +53,14 @@ int main()
     {   
         currentHash = hashName(names[i].name, names[i + SIZE].name);
         // Hash first and last name (constant offset = SIZE) and insert them in the hashSet
-        insert(currentHash);
+        insert(&currentHash);
     }
 
     printf("%lu", amount);
     
+    free(names);
+    free(hashSet);
+
     return 0;
 }
 
@@ -89,22 +92,22 @@ ulint hashName(const char* firstName, const char* lastName)
     return hash;
 }
 
-void insert(const ulint key)
+void insert(const ulint* key)
 {
     // Modulo the key to get an index in the set
-    ulint index = key % SIZE;
+    ulint index = *key % SIZE;
 
     // Point to an adress within the set
     ulint* currentKey = &hashSet[index];
 
     // If key already exists, return
-    if (*currentKey == key) {return;}
+    if (*currentKey == *key) {return;}
 
     // Loop through until we find an empty spot to put the key
     while (*currentKey != 0)
     {
         // Duplicate key, return
-        if (*currentKey == key) {return;}
+        if (*currentKey == *key) {return;}
 
         // Move forward in the hashSet and wrap around.
         index = (index + 1) % SIZE;
@@ -113,5 +116,5 @@ void insert(const ulint key)
 
     // Increase amount of names if above was sucessfull and set the current key to the given key
     amount++;
-    *currentKey = key;
+    *currentKey = *key;
 }
