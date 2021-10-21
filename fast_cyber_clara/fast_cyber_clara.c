@@ -6,7 +6,7 @@
 #define ulint unsigned long int
 
 // Used as a value to hash the string. Best if Prime number
-#define HASH_VALUE 31
+#define HASH_VALUE 33
 
 // Hashes a given first and last names by taking a pointer to where they are stored
 ulint hashName(const char* firstName, const char* lastName);
@@ -42,9 +42,10 @@ int main()
     hashSet = malloc(SIZE * sizeof(ulint));
     memset(hashSet, 0, SIZE * sizeof(ulint));
 
+    gets(names[0].name); // Read first line that is in the stdin, it's the amount
     for (ulint i = 0; i < 2 * SIZE; i++)
     {
-        scanf("%s", names[i].name);
+        gets(names[i].name); // gets is faster than scanf (gets is dangerous but it gives a 0.01 difference so, that's nice (for kattis that is))
     }
 
     ulint currentHash = 0;

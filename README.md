@@ -41,6 +41,8 @@ Another solution for Cyber Clara (see under `faster_cyber_clara`) is by implemen
 3. Insert in the HashSet (if key already exists then don't). Each successful insertion increments a counter
 4. Return counter
 
+Also, reading strings is the heaviest thing in the program. `gets` is used to faster than scanf.
+
 ### Game Rank
 This is really just following the rules given by Kattis but in general it's
 1. Get the next character in the stream while it's not end of file `EOF`
