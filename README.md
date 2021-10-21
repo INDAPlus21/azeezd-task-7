@@ -25,7 +25,7 @@ Since C is C, another approach was taken.
 4. Sort the array of integers in descending order
 5. Sum the first half of the array
 
-### Cyber Clara (Differes from Rust Version)
+### Cyber Clara (Differs from Rust Version)
 Again since C is C, another approach was taken.
 1. Get the amount of names
 2. Prepare an array to store names (it's a struct of names and a middle-of-name indexer, used to avoid collision complications)
@@ -41,7 +41,7 @@ Another solution for Cyber Clara (see under `faster_cyber_clara`) is by implemen
 3. Insert in the HashSet (if key already exists then don't). Each successful insertion increments a counter
 4. Return counter
 
-Also, reading strings is the heaviest thing in the program. `gets` is used to faster than scanf.
+Also, reading strings is the heaviest thing in the program. `gets` is used to faster than scanf. This gives a 0.01 difference. Making Kattis count it at 0.02s (Fastest C solution at the time this is written).
 
 ### Game Rank
 This is really just following the rules given by Kattis but in general it's
