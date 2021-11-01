@@ -24,27 +24,12 @@ int main()
     // Storing the inputted numbers
     long int* numbers = malloc(size * sizeof(long int));
     
-    // As per Kattis, the numbers do not exceed a 10^6, so they string length is at max 6 (eg. 99999) then 1 character extra for the null terminator
-    char data[7];
-    gets(data); // Skip first line of the stream which was the size of the numbers
-
-    // Loop for each value we are expecting (size)
-    for (long int i = 0; i < size; i++)
+    // Read input and store it in numbers array
+    for (size_t i = 0; i < size; i++)
     {
-        // Since numbers are given in one line, we scan through the line. Storing each character we're at in the data
-        // Once we reach a whitespace (space or newline). We break and then convert the stored value into a long int and put it our numbers array
-        for (long int j = 0; j < 7; j++)
-        {
-            char currentCharacter = getc(stdin); // Get character pointed at
-            data[j] = currentCharacter; // Store that character we're pointed into the data
-            if (currentCharacter == ' ' || currentCharacter == '\n') // white space, we break
-                break;
-        }
-
-        char * null; // Just a throwaway in order to use the string to long function
-        numbers[i] = strtol(data, &null, 10);
+        scanf("%li", numbers + i);
     }
-
+    
     // Sort the list
     qsort(numbers, size, sizeof(long int), compare);
     
@@ -53,10 +38,8 @@ int main()
     for (long int i = 0; i < check; i++)
     {
         sum += numbers[i];
-        
     }
     
-    // Done! :D
     printf("%li", sum);
 
     free(numbers);

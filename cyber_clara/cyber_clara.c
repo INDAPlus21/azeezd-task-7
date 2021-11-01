@@ -1,62 +1,121 @@
 #include "stdio.h"
 #include "stdlib.h"
-#include "string.h"
+#include "memory.h"
 
-// Store name and where the middle of the name is
-// Delimiter is used to avoid erroers such as "bob aba" and "bo baba" will both be stored as "bobaba" thus adding a delimter to distguish them
-struct name
-{
-    char name[42]; // 42 because, 20 for first name, 20 for last, 1 for delimiter and 1 for null terminator
-    unsigned char middle; // place of the delimiter
-};
+// Couldn't be bothered writing it out a zillion times
+#define ulint unsigned long int
 
-// Compare function, compares the name value of the name struct. Used to sort names alphabetically
-int compare(const void* val1, const void* val2)
+// Used as a value to hash the string. Best if Prime number
+#define HASH_VALUE 33
+
+// Hashes a given first and last names by taking a pointer to where they are stored
+ulint hashName(const char* firstName, const char* lastName);
+
+// Insert to the hashSet. Will not add if key already exists. Increments amount by one if key sucessfully added.
+void insert(const ulint* key);
+
+// A HashMap-like structure but only allows unique values
+ulint* hashSet;
+
+// Amount of values in the hashSet
+ulint amount = 0;
+
+// The amount of names that will be inputted. Given in first line of the input
+ulint SIZE = 0;
+
+// Store the name
+typedef struct
 {
-    const struct name* pVal1 = (const struct name*) val1;
-    const struct name* pVal2 = (const struct name*) val2;
-    return strcmp(pVal1->name, pVal2->name);
-}
+    char name[21]; // By Kattis, names are max 20 characters + 1 for null terminator
+} name;
+
 
 int main()
 {
     // Get amount of names
-    unsigned long int size;
-    scanf("%lu", &size);
+    scanf("%lu", &SIZE);
 
-    // Allocate places for names (struct)
-    struct name* names = malloc(size * sizeof(struct name));
+    // Store inputted names int the name struct
+    name* names = malloc(2 * SIZE * sizeof(name));
 
-    // Scan the first names and store where they end in the name
-    for (unsigned long int i = 0; i < size; i++)
+    // Initilise memory for hashSet and its default values
+    hashSet = malloc(SIZE * sizeof(ulint));
+    memset(hashSet, 0, SIZE * sizeof(ulint));
+
+    gets(names[0].name); // Read first line that is in the stdin, it's the amount
+    for (ulint i = 0; i < 2 * SIZE; i++)
     {
-        scanf("%s", names[i].name);
-        names[i].middle = strlen(names[i].name);
+        gets(names[i].name); // gets is faster than scanf (gets is dangerous but it gives a 0.01 difference so, that's nice (for kattis that is))
     }
 
-    // Scan last name and store them starting from the after the middle of name
-    for (unsigned long int i = 0; i < size; i++)
-    {
-        names[i].name[names[i].middle] = '_'; // Set delimiter
-        scanf("%s", names[i].name + names[i].middle + 1); // Store after the middle
+    ulint currentHash = 0;
+    // Loop through names
+    for (ulint i = 0; i < SIZE; i++)
+    {   
+        currentHash = hashName(names[i].name, names[i + SIZE].name);
+        // Hash first and last name (constant offset = SIZE) and insert them in the hashSet
+        insert(&currentHash);
     }
 
-    qsort(names, size, sizeof(struct name), compare);
+    printf("%lu", amount);
     
-    unsigned long int newSize = size;
-
-    // Loop through names once comparing current with next value. If current is equal to next, decrement newSize (we have a duplicate!)
-    for (size_t i = 0; i < size - 1; i++)
-    {
-        if (strcmp(names[i].name, names[i+1].name) == 0)
-            newSize--;
-    }
-
-    // Print the new size after filtering out the duplicates
-    printf("%lu", newSize);
-
-
     free(names);
+    free(hashSet);
 
     return 0;
+}
+
+ulint hashName(const char* firstName, const char* lastName)
+{
+    // The hash value that will be returned
+    ulint hash = 0;
+
+    const char* currentChar = firstName;
+
+    // Iterate through first name until null terminator
+    while (*currentChar != '\0')
+    {
+        hash = (hash + *currentChar) * HASH_VALUE;
+        currentChar++;
+    }
+
+    // Delimiter
+    hash = (hash + '.') * HASH_VALUE;
+
+    // Switching to last name and then looping the same fashion as firstName
+    currentChar = lastName;
+    while (*currentChar != '\0')
+    {
+        hash = (hash + *currentChar) * HASH_VALUE;
+        currentChar++;
+    }
+    
+    return hash;
+}
+
+void insert(const ulint* key)
+{
+    // Modulo the key to get an index in the set
+    ulint index = *key % SIZE;
+
+    // Point to an adress within the set
+    ulint* currentKey = &hashSet[index];
+
+    // If key already exists, return
+    if (*currentKey == *key) {return;}
+
+    // Loop through until we find an empty spot to put the key
+    while (*currentKey != 0)
+    {
+        // Duplicate key, return
+        if (*currentKey == *key) {return;}
+
+        // Move forward in the hashSet and wrap around.
+        index = (index + 1) % SIZE;
+        currentKey = &hashSet[index];
+    }
+
+    // Increase amount of names if above was sucessfull and set the current key to the given key
+    amount++;
+    *currentKey = *key;
 }
